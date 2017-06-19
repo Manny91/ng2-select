@@ -1,3 +1,4 @@
+import { SubTextDemoComponent } from './components/select/sub-text-demo';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
@@ -23,7 +24,8 @@ import { SampleSectionComponent } from './components/sample-section.component';
     MultipleDemoComponent,
     RichDemoComponent,
     SingleDemoComponent,
-    DisabledDemoComponent
+    DisabledDemoComponent,
+    SubTextDemoComponent
   ],
   imports: [
     BrowserModule,

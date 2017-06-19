@@ -17,24 +17,24 @@ let styles = `
   .ui-select-placeholder {
     float: left;
   }
-  
+
   /* Fix Bootstrap dropdown position when inside a input-group */
   .input-group > .dropdown {
     /* Instead of relative */
     position: static;
   }
-  
+
   .ui-select-match > .btn {
     /* Instead of center because of .btn */
     text-align: left !important;
   }
-  
+
   .ui-select-match > .caret {
     position: absolute;
     top: 45%;
     right: 15px;
   }
-  
+
   .ui-disabled {
     background-color: #eceeef;
     border-radius: 4px;
@@ -47,7 +47,7 @@ let styles = `
     left: 0;
     cursor: not-allowed;
   }
-  
+
   .ui-select-choices {
     width: 100%;
     height: auto;
@@ -55,9 +55,12 @@ let styles = `
     overflow-x: hidden;
     margin-top: 0;
   }
-  
+
   .ui-select-multiple .ui-select-choices {
     margin-top: 1px;
+  }
+  .ui-select-choices-row {
+      position: relative;
   }
   .ui-select-choices-row>a {
       display: block;
@@ -74,18 +77,22 @@ let styles = `
       outline: 0;
       background-color: #428bca;
   }
+  .ui-select-choices-row.active .ui-sub-text,
+  .ui-select-choices-row.disabled .ui-sub-text {
+      color: inherit;
+  }
   .ui-select-choices-row.disabled{
     pointer-events:none;
   }
   .ui-select-choices-row.disabled a{
     color:lightgray;
   }
-  
+
   .ui-select-multiple {
     height: auto;
     padding:3px 3px 0 3px;
   }
-  
+
   .ui-select-multiple input.ui-select-search {
     background-color: transparent !important; /* To prevent double background when disabled */
     border: none;
@@ -94,13 +101,13 @@ let styles = `
     height: 1.6666em;
     padding: 0;
     margin-bottom: 3px;
-    
+
   }
   .ui-select-match .close {
       font-size: 1.6em;
       line-height: 0.75;
   }
-  
+
   .ui-select-multiple .ui-select-match-item {
     outline: 0;
     margin: 0 3px 3px 0;
@@ -111,6 +118,16 @@ let styles = `
       top: 50%;
       right: 10px;
       margin-top: -2px;
+  }
+  .ui-sub-text {
+    position: absolute;
+    right: 10px;
+    top: 5px;
+    max-width: 135px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    color: #888098;
   }
 `;
 
@@ -140,7 +157,7 @@ let styles = `
         <span *ngIf="active.length <= 0" class="ui-select-placeholder text-muted">{{placeholder}}</span>
         <span *ngIf="active.length > 0" class="ui-select-match-text pull-left"
               [ngClass]="{'ui-select-allow-clear': allowClear && active.length > 0} "
-              [innerHTML]="sanitize(active[0].text)"></span>
+              [innerHTML]="sanitize(active[0].text)"></span><span></span>
         <i class="dropdown-toggle pull-right"></i>
         <i class="caret pull-right"></i>
         <a *ngIf="allowClear && active.length>0" class="btn btn-xs btn-link pull-right" style="margin-right: 10px; padding: 0;" (click)="removeClick(active[0], $event)">
@@ -148,7 +165,7 @@ let styles = `
         </a>
       </span>
     </div>
-    
+
       <input type="text" autocomplete="false" tabindex="-1"
            (keydown)="inputEvent($event)"
            (keyup)="inputEvent($event, true)"
@@ -156,29 +173,32 @@ let styles = `
            class="form-control ui-select-search"
            *ngIf="inputMode"
            placeholder="{{active.length <= 0 ? placeholder : ''}}">
-    
-    
+
+
      <!-- options template -->
      <ul *ngIf="optionsOpened && options && options.length > 0 && !firstItemHasChildren"
           class="ui-select-choices dropdown-menu" role="menu">
         <li *ngFor="let o of options" role="menuitem">
+
           <div class="ui-select-choices-row"
                [class.active]="isActive(o)"
                (mouseenter)="selectActive(o)"
                (click)="selectMatch(o, $event)" [ngClass]="{'disabled' : o.disabled}">
+
             <a href="javascript:void(0)" class="dropdown-item">
               <div [innerHtml]="sanitize(o.text | highlight:inputValue)"></div>
+              <span class="ui-sub-text">{{o.subText}}</span>
             </a>
           </div>
         </li>
       </ul>
-  
+
       <ul *ngIf="optionsOpened && options && options.length > 0 && firstItemHasChildren"
           class="ui-select-choices dropdown-menu" role="menu">
         <li *ngFor="let c of options; let index=index" role="menuitem">
           <div class="divider dropdown-divider" *ngIf="index > 0"></div>
           <div class="dropdown-header">{{c.text}}</div>
-  
+
           <div *ngFor="let o of c.children"
                class="ui-select-choices-row"
                [class.active]="isActive(o)"
@@ -187,6 +207,7 @@ let styles = `
                [ngClass]="{'active': isActive(o),'disabled' : o.disabled}">
             <a href="javascript:void(0)" class="dropdown-item">
               <div [innerHtml]="sanitize(o.text | highlight:inputValue)"></div>
+              <span class="ui-sub-text">{{o.subText}}</span>
             </a>
           </div>
         </li>
@@ -225,7 +246,7 @@ let styles = `
            placeholder="{{active.length <= 0 ? placeholder : ''}}"
            role="combobox">
     </div>
-    
+
      <!-- options template -->
      <ul *ngIf="optionsOpened && options && options.length > 0 && !firstItemHasChildren"
           class="ui-select-choices dropdown-menu" role="menu">
@@ -236,17 +257,18 @@ let styles = `
                (click)="selectMatch(o, $event)" [ngClass]="{'disabled' : o.disabled}">
             <a href="javascript:void(0)" class="dropdown-item">
               <div [innerHtml]="sanitize(o.text | highlight:inputValue)"></div>
+              <span class="ui-sub-text">{{o.subText}}</span>
             </a>
           </div>
         </li>
       </ul>
-  
+
       <ul *ngIf="optionsOpened && options && options.length > 0 && firstItemHasChildren"
           class="ui-select-choices dropdown-menu" role="menu">
         <li *ngFor="let c of options; let index=index" role="menuitem">
           <div class="divider dropdown-divider" *ngIf="index > 0"></div>
           <div class="dropdown-header">{{c.text}}</div>
-  
+
           <div *ngFor="let o of c.children"
                class="ui-select-choices-row"
                [class.active]="isActive(o)"
@@ -255,6 +277,7 @@ let styles = `
                [ngClass]="{'active': isActive(o), 'disabled': o.disabled}">
             <a href="javascript:void(0)" class="dropdown-item">
               <div [innerHtml]="sanitize(o.text | highlight:inputValue)"></div>
+              <span class="ui-sub-text">{{o.subText}}</span>
             </a>
           </div>
         </li>
@@ -268,6 +291,7 @@ export class SelectComponent implements OnInit, ControlValueAccessor, OnChanges 
   @Input() public idField:string = 'id';
   @Input() public textField:string = 'text';
   @Input() public disabledField:string = 'disabled';
+  @Input() public subTextField:string = 'subText';
   @Input() public childrenField:string = 'children';
   @Input() public multiple:boolean = false;
 
@@ -281,7 +305,7 @@ export class SelectComponent implements OnInit, ControlValueAccessor, OnChanges 
           return item;
         }
       });
-      this.itemObjects = this._items.map((item:any) => (typeof item === 'string' ? new SelectItem(item) : new SelectItem({id: item[this.idField], text: item[this.textField], disabled: item[this.disabledField], children: item[this.childrenField]})));
+      this.itemObjects = this._items.map((item:any) => (typeof item === 'string' ? new SelectItem(item) : new SelectItem({id: item[this.idField], text: item[this.textField], disabled: item[this.disabledField], subText: item[this.subTextField], children: item[this.childrenField]})));
     }
   }
 

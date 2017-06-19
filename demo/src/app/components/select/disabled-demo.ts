@@ -9,47 +9,50 @@ export class DisabledDemoComponent {
     [
       {
         id:1,
-        text:'Amsterdam'
+        text:'Amsterdam',
+        subText: 'pepe'
       },
       {
         id:2,
         text:'Antwerp',
         disabled:true,
+        subText: 'pepe'
       },
       {
         id:3,
         text:'Athens',
         disabled:true,
+        subText: 'pepe'
       },
       {
         id:4,
         text:'Berlin',
-        disabled:false,
+        disabled:false
       },
       {
         id:5,
         text:'Birmingham',
-        disabled:false,
+        disabled:false
       },
       {
         id:6,
         text:'Bradford',
-        disabled:true,
+        disabled:true
       },
       {
         id:7,
         text:'Bremen',
-        disabled:false,
+        disabled:false
       },
       {
         id:8,
         text:'Bucharest',
-        disabled:true,
+        disabled:true
       },
       {
         id:8,
         text:'Malaga',
-        disabled:false,
+        disabled:false
       }
     ];
 

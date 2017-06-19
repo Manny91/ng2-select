@@ -30,6 +30,11 @@ let tabDesc: any = {
     heading: 'Disabled options',
     ts: require('!!raw-loader?lang=typescript!./select/disabled-demo.ts'),
     html: require('!!raw-loader?lang=markup!./select/disabled-demo.html')
+  },
+  subText: {
+    heading: 'Secondary text options',
+    ts: require('!!raw-loader?lang=typescript!./select/sub-text-demo.ts'),
+    html: require('!!raw-loader?lang=markup!./select/sub-text-demo.html')
   }
 };
 
@@ -53,6 +58,9 @@ let tabDesc: any = {
       </tab>
       <tab heading="Disabled Option">
         <sample-section [desc]="tabDesc.disabled"><disabled-demo></disabled-demo></sample-section>
+      </tab>
+      <tab heading="Secondary text Option">
+        <sample-section [desc]="tabDesc.disabled" ><sub-text-demo></sub-text-demo></sample-section>
       </tab>
     </tabset>
   </div>
